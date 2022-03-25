@@ -1,0 +1,61 @@
+ 
+ this approach is to find no of such pairs existing in matrix
+ vector<int> num2;
+    int n1,n2;
+    map<int,int> umap1;
+    unordered_map<int,int> umap;
+    FindSumPairs(vector<int>& nums1, vector<int>& nums2) {
+        num2=nums2;
+        n1=nums1.size();
+        n2=nums2.size();
+        
+        for(int i=0;i<n1;i++)
+            umap1[nums1[i]]++;
+        
+        for(int i=0;i<n2;i++)
+            umap[nums2[i]]++;
+    }
+    void add(int index, int val) {
+        int temp=num2[index]+val;
+        umap[temp]++;
+        umap[num2[index]]--;
+        num2[index]+=val;
+    }
+    int count(int tot) {
+        int ans=0;
+        for(auto j:umap1)
+        {
+            if((tot-j.first)<=0) break;
+          // second is frequency and first is number
+            ans+=(j.second)*(umap[tot-j.first]);
+        }
+        return ans;
+    }
+    
+    this approach finds max value specific 2 pair in matrix
+    int findMaxValue(vector<vector<int>>& mat, int n) {
+     	int ans=INT_MIN;
+        for(int i=1;i<n;i++)
+        {
+            for(int j=1;j<n;j++)
+            {
+                ans=max(ans,mat[i][j]-mat[i-1][j-1] );
+                
+                // find min of the element,top,left,diagonal left immediate element and store in temp
+                int temp=min( min(mat[i-1][j],mat[i-1][j-1]), min(mat[i][j-1],mat[i][j] ) );
+                
+                
+                // the element in the same column yet upper row will be used for diff sum calculation for consecutive elements
+                // but it can only take a value smaller than it if it is not in the same row as i as for the next element j will increase and i will stay same and you can't use that value
+                if(temp!=mat[i][j] and temp!=mat[i][j-1])
+                 mat[i-1][j]=temp;
+         		
+                // the minimum of all neighbouring previous values will still be used in the current index
+                mat[i][j]=temp;
+
+            }
+            
+        }
+        return ans;
+}
+    
